@@ -3,7 +3,7 @@ import Pet from "../models/Pet.js";
 class PetService {
   static async getAllPets() {
     try {
-      return Pet.findAll();
+      return Pet.find();
     } catch (error) {
       throw new Error(error.message);
     }
@@ -11,7 +11,12 @@ class PetService {
 
   static async getPetById(id) {
     try {
-      return Pet.findById(id);
+      const pet = await Pet.findById(id);
+      if (!pet) {
+        throw new Error("Pet not found.");
+      }
+      
+      return pet;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -19,7 +24,11 @@ class PetService {
 
   static async createPet(petData) {
     try {
-      return Pet.create(petData);
+      const pet = await Pet.create(petData);
+      if (!pet) {
+        throw new Error("Pet not found.");
+      }
+      return pet
     } catch (error) {
       throw new Error(error.message);
     }
@@ -27,12 +36,11 @@ class PetService {
 
   static async updatePet(id, petData) {
     try {
-      const pet = await Pet.findById(id);
+      const pet = await Pet.findByIdAndUpdate(id, petData);
       if (!pet) {
-        throw new Error("Animal de estimação não encontrado.");
+        throw new Error("Pet not found.");
       }
-      await pet.update(petData);
-      return pet;
+      return pet
     } catch (error) {
       throw new Error(error.message);
     }
@@ -40,11 +48,7 @@ class PetService {
 
   static async deletePet(id) {
     try {
-      const pet = await Pet.findById(id);
-      if (!pet) {
-        throw new Error("Animal de estimação não encontrado.");
-      }
-      await pet.destroy();
+    await Pet.findByIdAndDelete(id);
     } catch (error) {
       throw new Error(error.message);
     }

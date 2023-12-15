@@ -4,24 +4,20 @@ class PetController {
   static async getAllPets(req, res) {
     try {
       const pets = await PetService.getAllPets();
-      res.json(pets);
+      res.status(201).json(pets);
     } catch (error) {
-      console.error(`APPOINTMENTS CONTROLLER: ${error}`);
+      console.error(`PET CONTROLLER: ${error}`);
       res.status(500).json({ error: error.message });
     }
   }
 
   static async getPetById(req, res) {
-    const { id } = req.params;
+    const id = req.params.id;
     try {
       const pet = await PetService.getPetById(id);
-      if (!pet) {
-        return res
-          .status(404)
-          .json({ message: "Animal de estimação não encontrado." });
-      }
-      res.json(pet);
+      res.status(201).json(pet);
     } catch (error) {
+      console.error(`PET CONTROLLER: ${error}`);
       res.status(500).json({ error: error.message });
     }
   }
@@ -32,28 +28,31 @@ class PetController {
       const newPet = await PetService.createPet(petData);
       res.status(201).json(newPet);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      console.error(`PET CONTROLLER: ${error}`);
+      res.status(500).json({ error: error.message });
     }
   }
 
   static async updatePet(req, res) {
-    const { id } = req.params;
+    const id = req.params.id;
     const petData = req.body;
     try {
-      const updatedPet = await PetService.updatePet(id, petData);
-      res.json(updatedPet);
+      await PetService.updatePet(id, petData);
+      res.status(201).send({ message: "Successfully updated." });
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      console.error(`PET CONTROLLER: ${error}`);
+      res.status(500).json({ error: error.message });
     }
   }
 
   static async deletePet(req, res) {
-    const { id } = req.params;
+    const id = req.params.id;
     try {
       await PetService.deletePet(id);
-      res.json({ message: "Animal de estimação removido com sucesso." });
+      res.json({ message: "Successfully deleted." });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.error(`PET CONTROLLER: ${error}`);
+      res.status(500).json({ error: `${error.message} - Deletion failed.` });
     }
   }
 }

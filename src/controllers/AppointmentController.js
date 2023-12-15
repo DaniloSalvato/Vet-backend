@@ -4,7 +4,7 @@ class AppointmentController {
   static async getAllAppointments(req, res) {
     try {
       const appointments = await AppointmentService.getAllAppointments();
-      res.json(appointments);
+      res.status(201).json(appointments);
     } catch (error) {
       console.error(`APPOINTMENTS CONTROLLER: ${error}`);
       res.status(500).json({ error: error.message });
@@ -12,13 +12,10 @@ class AppointmentController {
   }
 
   static async getAppointmentById(req, res) {
-    const { id } = req.params;
+    const id = req.params.id;
     try {
       const appointment = await AppointmentService.getAppointmentById(id);
-      if (!appointment) {
-        return res.status(404).json({ message: "Consulta não encontrada." });
-      }
-      res.json(appointment);
+      res.status(201).json(appointment);
     } catch (error) {
       console.error(`APPOINTMENTS CONTROLLER: ${error}`);
       res.status(500).json({ error: error.message });
@@ -28,13 +25,11 @@ class AppointmentController {
   static async createAppointment(req, res) {
     const appointmentData = req.body;
     try {
-      const newAppointment = await AppointmentService.createAppointment(
-        appointmentData
-      );
+      const newAppointment = await AppointmentService.createAppointment(appointmentData);
       res.status(201).json(newAppointment);
     } catch (error) {
       console.error(`APPOINTMENTS CONTROLLER: ${error}`);
-      res.status(400).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   }
 
@@ -42,14 +37,11 @@ class AppointmentController {
     const { id } = req.params;
     const appointmentData = req.body;
     try {
-      const updatedAppointment = await AppointmentService.updateAppointment(
-        id,
-        appointmentData
-      );
-      res.json(updatedAppointment);
+      await AppointmentService.updateAppointment(id,appointmentData);
+      res.status(201).send({ message: "Successfully updated." });
     } catch (error) {
       console.error(`APPOINTMENTS CONTROLLER: ${error}`);
-      res.status(400).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   }
 

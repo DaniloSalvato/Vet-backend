@@ -4,7 +4,7 @@ class OwnerController {
   static async getAllOwners(req, res) {
     try {
       const owners = await OwnerService.getAllOwners();
-      res.json(owners);
+      res.status(201).json(owners);
     } catch (error) {
       console.error(`OWNER CONTROLLER: ${error}`);
       res.status(500).json({ error: error.message });
@@ -12,25 +12,10 @@ class OwnerController {
   }
 
   static async getOwnerById(req, res) {
-    const { id } = req.params;
+    const id = req.params.id;
     try {
       const owner = await OwnerService.getOwnerById(id);
-      if (!owner) {
-        return res
-          .status(404)
-          .json({ message: "Proprietário não encontrado." });
-      }
-      res.json(owner);
-    } catch (error) {
-      console.error(`OWNER CONTROLLER: ${error}`);
-      res.status(500).json({ error: error.message });
-    }
-  }
-
-  static async getAllOwnersAndPets(req, res) {
-    try {
-      const ownersWithPets = await OwnerService.getAllOwnersAndPets();
-      res.status(200).json({ owners: ownersWithPets });
+      res.status(201).json(owner);
     } catch (error) {
       console.error(`OWNER CONTROLLER: ${error}`);
       res.status(500).json({ error: error.message });
@@ -49,11 +34,11 @@ class OwnerController {
   }
 
   static async updateOwner(req, res) {
-    const { id } = req.params;
+    const id = req.params.id;
     const ownerData = req.body;
     try {
-      const updatedOwner = await OwnerService.updateOwner(id, ownerData);
-      res.json(updatedOwner);
+      await OwnerService.updateOwner(id, ownerData);
+      res.status(201).send("Owner updated successfully.");
     } catch (error) {
       console.error(`OWNER CONTROLLER: ${error}`);
       res.status(400).json({ error: error.message });
@@ -64,10 +49,10 @@ class OwnerController {
     const { id } = req.params;
     try {
       await OwnerService.deleteOwner(id);
-      res.json({ message: "Proprietário removido com sucesso." });
+      res.status(201).json({ message: "Successfully deleted." });
     } catch (error) {
       console.error(`OWNER CONTROLLER: ${error}`);
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: `${error.message} - Deletion failed.` });
     }
   }
 }

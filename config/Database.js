@@ -1,12 +1,14 @@
-import { Sequelize } from "sequelize";
-import path from "path";
+import mongoose from "mongoose";
 
-const dbPath = path.join(process.cwd(), "vet_clinic.sqlite");
+export default async function Connection() {
+  try {
+    await mongoose.connect(process.env.URL_CONNECT_MONGO_DATABASE);
+    console.log("Conectado ao MongoDB");
+    return mongoose.connection;
+  } catch (err) {
+    console.error("Erro ao conectar ao MongoDB:", err);
+    throw err;
+  }
+}
 
-const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: dbPath,
-  logging: false,
-});
 
-export default sequelize;

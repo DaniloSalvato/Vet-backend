@@ -1,14 +1,9 @@
 import Appointment from "../models/Appointment.js";
-import ConsultationResult from "../models/ConsultationResult.js";
 
 class AppointmentService {
   static async getAllAppointments() {
     try {
-      const appointmentComplete = await Appointment.findAll({
-        include: ConsultationResult,
-      });
-
-      return appointmentComplete;
+      return await Appointment.find();
     } catch (error) {
       throw new Error(error.message);
     }
@@ -16,7 +11,12 @@ class AppointmentService {
 
   static async getAppointmentById(id) {
     try {
-      return Appointment.findById(id);
+      const appointment = Appointment.findById(id);
+      if (!appointment) {
+        throw new Error("Appointment not found.");
+      }
+      
+      return appointment;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -24,7 +24,11 @@ class AppointmentService {
 
   static async createAppointment(appointmentData) {
     try {
-      return Appointment.create(appointmentData);
+      const appointment = Appointment.create(appointmentData);
+      if (!appointment) {
+        throw new Error("Appointment not found.");
+      }
+      return appointment
     } catch (error) {
       throw new Error(error.message);
     }
@@ -32,11 +36,11 @@ class AppointmentService {
 
   static async updateAppointment(id, appointmentData) {
     try {
-      const appointment = await Appointment.findById(id);
+      const appointment = await Appointment.findByIdAndUpdate(id, appointmentData);
       if (!appointment) {
-        throw new Error("Consulta não encontrada.");
+        throw new Error("Appointment not found.");
       }
-      await appointment.update(appointmentData);
+  
       return appointment;
     } catch (error) {
       throw new Error(error.message);
@@ -45,11 +49,7 @@ class AppointmentService {
 
   static async deleteAppointment(id) {
     try {
-      const appointment = await Appointment.findById(id);
-      if (!appointment) {
-        throw new Error("Consulta não encontrada.");
-      }
-      await appointment.destroy();
+    await Appointment.findByIdAndDelete(id);
     } catch (error) {
       throw new Error(error.message);
     }
