@@ -1,4 +1,4 @@
-import Diagnosis from "../models/Diagnosis.js";
+import {Diagnosis} from "../models/Diagnosis.js";
 
 class DiagnosisService {
   static async getAllDiagnosis() {

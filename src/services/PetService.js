@@ -1,4 +1,4 @@
-import Pet from "../models/Pet.js";
+import { Pet } from "../models/Pet.js";
 
 class PetService {
   static async getAllPets() {
@@ -15,7 +15,7 @@ class PetService {
       if (!pet) {
         throw new Error("Pet not found.");
       }
-      
+
       return pet;
     } catch (error) {
       throw new Error(error.message);
@@ -28,7 +28,7 @@ class PetService {
       if (!pet) {
         throw new Error("Pet not found.");
       }
-      return pet
+      return pet;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -40,7 +40,7 @@ class PetService {
       if (!pet) {
         throw new Error("Pet not found.");
       }
-      return pet
+      return pet;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -48,7 +48,7 @@ class PetService {
 
   static async deletePet(id) {
     try {
-    await Pet.findByIdAndDelete(id);
+      await Pet.findByIdAndDelete(id);
     } catch (error) {
       throw new Error(error.message);
     }

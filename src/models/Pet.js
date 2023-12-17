@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { AppointmentSchema } from "./Appointment.js";
 
-const { Schema } = mongoose;
+const { Schema, model } = mongoose;
 
 const petSchema = new Schema(
   {
@@ -11,10 +12,11 @@ const petSchema = new Schema(
       required: [true, "Species is required"],
     },
     age: { type: Number, min: 0, default: 0 },
+    appointment: [{ type: AppointmentSchema }],
   },
   { versionKey: false }
 );
 
-const Pet = mongoose.model("Pet", petSchema);
+const Pet = model("Pet", petSchema);
 
-export default Pet;
+export { Pet, petSchema };

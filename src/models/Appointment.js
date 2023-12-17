@@ -1,14 +1,17 @@
 import mongoose from "mongoose";
+import { DiagnosisSchema } from "./Diagnosis.js";
 
-const { Schema } = mongoose;
+const { Schema, model } = mongoose;
 
-const appointmentSchema = new Schema({
-  ownerId: { type: Number, required: true }, 
-  petId: { type: Number, required: true }, 
-  appointmentDate: { type: Date, required: true }, 
-  reason: { type: String, required: true }, 
-}, { versionKey: false });
+const AppointmentSchema = new Schema(
+  {
+    appointmentDate: { type: Date, required: true },
+    reason: { type: String, required: true },
+    diagnosis: [{ type: DiagnosisSchema }],
+  },
+  { versionKey: false }
+);
 
-const Appointment = mongoose.model("Appointment", appointmentSchema);
+const Appointment = model("Appointment", AppointmentSchema);
 
-export default Appointment;
+export { Appointment, AppointmentSchema };
